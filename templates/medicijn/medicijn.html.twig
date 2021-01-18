@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+        {% block body %}
+            <div>
+                <a href= {{ path('new') }}>add medicijn</a>
+                <a href={{ path('showPat') }}>patienten overzicht</a>
+            </div>
+            {% for med in medicijn %}
+                <div class="container  p-3 my-3 bg-dark text-white">
+                    <div class="jumbotron bg-dark">
+                        name : {{ med.name }} <br>
+                        price : {{ med.price }} <br>
+                        discription : {{ med.discription }} <br>
+                        sideEffect : {{ med.sideEffect }} <br>
+                        <a href={{ path('delete', {'id':med.id}) }}>Delete</a>
+                        <a href={{ path('update', {'id':med.id}) }}>Update</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endblock %}

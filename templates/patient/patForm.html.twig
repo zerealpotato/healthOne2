@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1> voeg nieuwe patienten toe</h1>
+
+        {{ form_start(patForm) }}
+        {{ form_widget(patForm) }}
+        <button type="submit" class="btn btn-primary">add</button>
+        {{ form_end(patForm) }}
+    </div>
+{% endblock %}

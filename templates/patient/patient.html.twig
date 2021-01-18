@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+        {% block body %}
+            <div>
+                <a href= {{ path('newPat') }}>add patient</a>
+                <a href= {{ path('show') }}>medicijnen overzicht</a><br>
+            </div>
+            {% for pat in patient %}
+                <div class="container  p-3 my-3 bg-dark text-white">
+                    <div class="jumbotron bg-dark">
+                        name : {{ pat.name }} <br>
+                        birthdate : {{ pat.birthdate }} <br>
+                        adress : {{ pat.adress }} <br>
+                        insurance type : {{ pat.insuranceType }} <br>
+                        <a href={{ path('deletePat', {'id':pat.id}) }}>Delete</a>
+                        <a href={{ path('updatePat', {'id':pat.id}) }}>Update</a>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endblock %}
