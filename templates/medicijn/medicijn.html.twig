@@ -2,8 +2,16 @@
 
         {% block body %}
             <div>
-                <a href= {{ path('new') }}>add medicijn</a>
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_APOT') %}
+                    <a href= {{ path('new') }}>add medicijn</a>
+                {% endif %}
                 <a href={{ path('showPat') }}>patienten overzicht</a>
+                {% if not app.user %}
+                    <a href={{ path('app_login') }}>login</a>
+                {% endif %}
+                {% if app.user %}
+                    <a href={{ path('app_logout') }}>logout</a>
+                {% endif %}
             </div>
             {% for med in medicijn %}
                 <div class="container  p-3 my-3 bg-dark text-white">
@@ -12,8 +20,10 @@
                         price : {{ med.price }} <br>
                         discription : {{ med.discription }} <br>
                         sideEffect : {{ med.sideEffect }} <br>
+                        {% if is_granted("ROLE_APOT") or is_granted("ROLE_ADMIN") %}
                         <a href={{ path('delete', {'id':med.id}) }}>Delete</a>
                         <a href={{ path('update', {'id':med.id}) }}>Update</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

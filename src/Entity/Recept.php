@@ -26,7 +26,7 @@ class Recept
     /**
      * @ORM\Column(type="integer")
      */
-    private $doce;
+    private $dose;
 
     /**
      * @ORM\Column(type="integer")
@@ -38,6 +38,12 @@ class Recept
      * @ORM\JoinColumn(nullable=false)
      */
     private $Medicijn;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Patient::class, inversedBy="Recept")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $patient;
 
     public function getId(): ?int
     {
@@ -56,14 +62,14 @@ class Recept
         return $this;
     }
 
-    public function getDoce(): ?int
+    public function getDose(): ?int
     {
-        return $this->doce;
+        return $this->dose;
     }
 
-    public function setDoce(int $doce): self
+    public function setDose(int $dose): self
     {
-        $this->doce = $doce;
+        $this->dose = $dose;
 
         return $this;
     }
@@ -88,6 +94,18 @@ class Recept
     public function setMedicijn(?Medicijn $Medicijn): self
     {
         $this->Medicijn = $Medicijn;
+
+        return $this;
+    }
+
+    public function getPatient(): ?Patient
+    {
+        return $this->patient;
+    }
+
+    public function setPatient(?Patient $patient): self
+    {
+        $this->patient = $patient;
 
         return $this;
     }

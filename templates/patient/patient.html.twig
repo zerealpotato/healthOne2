@@ -2,8 +2,19 @@
 
         {% block body %}
             <div>
-                <a href= {{ path('newPat') }}>add patient</a>
-                <a href= {{ path('show') }}>medicijnen overzicht</a><br>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href= {{ path('newPat') }}>add patient</a>
+                {% endif %}
+                {% if is_granted('ROLE_APOT') or is_granted("ROLE_ADMIN") %}
+                    <a href= {{ path('showRecept') }}>show recepten</a>
+                {% endif %}
+                <a href= {{ path('show') }}>medicijnen overzicht</a>
+                {% if not app.user %}
+                    <a href={{ path('app_login') }}>login</a>
+                {% endif %}
+                {% if app.user %}
+                    <a href={{ path('app_logout') }}>logout</a>
+                {% endif %}
             </div>
             {% for pat in patient %}
                 <div class="container  p-3 my-3 bg-dark text-white">
@@ -12,8 +23,13 @@
                         birthdate : {{ pat.birthdate }} <br>
                         adress : {{ pat.adress }} <br>
                         insurance type : {{ pat.insuranceType }} <br>
-                        <a href={{ path('deletePat', {'id':pat.id}) }}>Delete</a>
-                        <a href={{ path('updatePat', {'id':pat.id}) }}>Update</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href={{ path('deletePat', {'id':pat.id}) }}>Delete</a>
+                            <a href={{ path('updatePat', {'id':pat.id}) }}>Update</a>
+                        {% endif %}
+                        {% if is_granted("ROLE_DOKTER") or is_granted("ROLE_ADMIN") %}
+                            <a href={{ path('addRecept', {'id':pat.id}) }}>add recept</a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}

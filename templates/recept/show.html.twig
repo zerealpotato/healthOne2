@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <a href="{{ path('show') }}">terug</a><br>
+    {% for recept in recept %}
+        <div class="container  p-3 my-3 bg-dark text-white">
+            <a hidden>{{ recept.id }}</a>
+            patient : {{ recept.patient.name }} <br>
+            medicijn : {{ recept.medicijn.name }} <br>
+            hoeveel per keer : {{ recept.dose }} <br>
+            hoe vaak per week : {{ recept.duur}} <br>
+            begin datum : {{ recept.date|date("d/m/Y") }}
+        </div>
+    {% endfor %}
+{% endblock %}

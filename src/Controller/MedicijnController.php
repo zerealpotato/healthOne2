@@ -3,11 +3,15 @@
 namespace App\Controller;
 
 use App\Entity\Medicijn;
+use App\Entity\Patient;
+use App\Entity\Recept;
 use App\form\medicijnFormType;
+use App\form\ReceptFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MedicijnController extends AbstractController
@@ -36,7 +40,7 @@ class MedicijnController extends AbstractController
 
         }
 
-        return $this->render('/medForm.html.twig', ['medForm'=> $form->createView(),]);
+        return $this->render('/medicijn/medForm.html.twig', ['medForm'=> $form->createView(),]);
 
     }
     /**
@@ -76,14 +80,49 @@ class MedicijnController extends AbstractController
 
         }
 
-        return $this->render('/medForm.html.twig', [
+        return $this->render('/medicijn/medForm.html.twig', [
             'medForm' => $form->createView(),
         ]);
+    }
+    /**
+     * @Route("/{id}/addRecept", name="addRecept")
+     */
+    public function addRecept($id,EntityManagerInterface $em,Request $request): Response{
+        $rec = new Recept();
+        $form = $this->createForm(ReceptFormType::class, $rec);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $med = $form->getData();
+            $pat = $em->getRepository(Patient::class)->find($id);
+            $med->setPatient($pat);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($med);
+            $em->flush();
+
+            return $this->redirectToRoute('show');
+        }
+
+        return $this->render('/medicijn/medForm.html.twig',[
+            'medForm' => $form->createView(),
+        ]);
+    }
+    /**
+     * @Route("/showRecept" ,name="showRecept")
+     */
+    public function showRecept(): Response {
+        $recept = $this->getDoctrine()->getRepository(Recept::class)->findAll();
+
+        if (!$recept){
+            throw $this->createNotFoundException('no recepten found');
+        }
+        return $this->render('/recept/show.html.twig', ['recept' => $recept]);
     }
 
 
     /**
-     * @Route("/", name="show")
+     * @Route("/ ", name="show")
      */
 
     public function showMedicijn(): Response
